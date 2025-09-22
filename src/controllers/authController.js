@@ -11,12 +11,12 @@ dotenv.config();
 const register = async (req, res) => {
   
   const {
-    firstName,
-    lastName,
+    firstName= "",
+    lastName= "",
     username,
     email,
     password,
-    gender,
+    gender="",
     role,
     address,
     phone,
