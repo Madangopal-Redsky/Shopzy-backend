@@ -9,18 +9,18 @@ const sendNotification = require("../../utils/sendNotification");
 dotenv.config();
 
 const register = async (req, res) => {
-  const body = req.body || {};
+  
   const {
-    firstName= "",
-    lastName= "",
+    firstName,
+    lastName,
     username,
     email,
     password,
-    gender="",
+    gender,
     role,
     address,
     phone,
-  } = body;
+  } = req.body;
 
   try {
     const exists = await Auth.findOne({ email });
@@ -29,18 +29,18 @@ const register = async (req, res) => {
     }
     if (req.file) {
       profileImage = `/uploads/${req.file.filename}`;
-    } else if (body.profileImage) {
-      const savedPath = saveProfileImageFromBase64(body.profileImage);
+    } else if (req.body.profileImage) {
+      const savedPath = saveProfileImageFromBase64(req.body.profileImage);
       profileImage = `${savedPath}`;
     }
 
     const user = new Auth({
-      firstName: role === "admin" ? "" : firstName,
-      lastName: role === "admin" ? "" : lastName,
+      firstName,
+      lastName,
       username,
       email,
       password,
-      gender: role === "admin" ? "" : gender,
+      gender,
       role,
       profileImage,
       address,
@@ -54,6 +54,7 @@ const register = async (req, res) => {
       process.env.JWT_SECRET || "redskyecommerceapp",
       { expiresIn: "7d" }
     );
+
     if(user.role ==="admin"){
       const users = await Auth.find({ role: "super-admin", fcmToken: { $ne: "" } });
           users.forEach((u) => {

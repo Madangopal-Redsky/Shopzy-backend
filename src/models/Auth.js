@@ -10,7 +10,7 @@ const AuthSchema = new Schema(
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    gender: { type: String, enum: ['male', 'female', 'other']},
+    gender: { type: String, enum: ['male', 'female', 'other','']},
     role: { type: String, enum: ['super-admin', 'admin', 'user'], default: 'user' },
     status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }, 
     approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Auth", default: null },

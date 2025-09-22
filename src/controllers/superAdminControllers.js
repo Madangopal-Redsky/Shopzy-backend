@@ -1,3 +1,4 @@
+const sendNotification = require("../../utils/sendNotification");
 const { Auth } = require("../models/Auth");
 const { Shop } = require("../models/Shop");
 
@@ -22,19 +23,9 @@ exports.approveAdmin = async (req, res) => {
   try {
     const { adminId } = req.body;
     const admin = await Auth.findById(adminId);
+    console.log(" admin:::::", admin);
+    
     if (!admin) return res.status(404).json({ message: "Admin not found" });
-
-    admin.status = "approved";
-    admin.approvedBy = req.user.id;
-    await admin.save();
-    await Shop.create({
-      shopName: admin.username,
-      shopImage: admin.profileImage || null,
-      admin: admin._id,
-      products: [],
-      description: "",
-      address: admin.address,
-    });
 
     if (admin.fcmToken) {
       sendNotification(
@@ -44,6 +35,18 @@ exports.approveAdmin = async (req, res) => {
         { type: "ADMIN_APPROVED" }
       );
     }
+    admin.status = "approved";
+    admin.approvedBy = req.user.id;
+
+    await admin.save();
+    await Shop.create({
+      shopName: admin.username,
+      shopImage: admin.profileImage || null,
+      admin: admin._id,
+      products: [],
+      description: "",
+      address: admin.address,
+    });
 
     res.json({ message: "Admin approved and shop created", admin });
   } catch (err) {

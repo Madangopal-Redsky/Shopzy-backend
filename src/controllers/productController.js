@@ -104,7 +104,7 @@ const updateProduct = async (req, res) => {
 
     res.status(200).json(updated);
   } catch (err) {
-    console.error("❌ Update product error:", err);
+    console.error("Update product error:", err);
     res.status(500).json({ error: err.message });
   }
 };
