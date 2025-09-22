@@ -9,7 +9,7 @@ const sendNotification = require("../../utils/sendNotification");
 dotenv.config();
 
 const register = async (req, res) => {
-  
+  const body = req.body || {};
   const {
     firstName= "",
     lastName= "",
@@ -20,7 +20,7 @@ const register = async (req, res) => {
     role,
     address,
     phone,
-  } = req.body;
+  } = body;
 
   try {
     const exists = await Auth.findOne({ email });
@@ -29,8 +29,8 @@ const register = async (req, res) => {
     }
     if (req.file) {
       profileImage = `/uploads/${req.file.filename}`;
-    } else if (req.body.profileImage) {
-      const savedPath = saveProfileImageFromBase64(req.body.profileImage);
+    } else if (body.profileImage) {
+      const savedPath = saveProfileImageFromBase64(body.profileImage);
       profileImage = `${savedPath}`;
     }
 
