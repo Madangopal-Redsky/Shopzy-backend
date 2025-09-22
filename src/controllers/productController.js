@@ -7,7 +7,6 @@ const { Auth } = require("../models/Auth");
 const createProduct = async (req, res) => {
   try {
     const body = req.body;
-console.log("body:::", body);
 
     let category;
     if (body.categoryName) {
@@ -24,7 +23,6 @@ console.log("body:::", body);
       }
       body.category = category._id;
     }
-    console.log("body.category::", body.category);
     
     if (req.files?.images) {
       const files = req.files.images;
@@ -35,7 +33,6 @@ console.log("body:::", body);
     body.admin = req.user.id;
 
     const prod = new Product(body);
-    console.log("prod:::", prod);
     
     await prod.save();
 
@@ -52,30 +49,6 @@ console.log("body:::", body);
       await shop.save();
     }
 
-    console.log(" shop:::", shop);
-    
-    
-
-    // try {
-    //   const users = await Auth.find({ role: "user", fcmToken: { $ne: "" } });
-    //   console.log("users:::", users);
-      
-    //   users.forEach((u) => {
-    //     console.log("user fcm token::", u);
-        
-    //     sendNotification(
-    //       u.fcmToken,
-    //       "New Product Added",
-    //       `New product "${prod.title}" is now available`,
-    //       { type: "NEW_PRODUCT", productId: prod._id.toString() }
-    //     );
-    //   });
-    // } catch (error) {
-    //   console.error("Errror in create::", errror);
-      
-    // }
-
-    //--------after simple----------
      if (prod.discount && prod.discount >= 50) {
       const users = await Auth.find({ role: "user", fcmToken: { $ne: "" } });
       users.forEach((u) => {

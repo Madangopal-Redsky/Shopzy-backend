@@ -4,8 +4,6 @@ exports.saveFcmToken = async (req, res) => {
   try {
     
     const { fcmToken } = req.body;
-    console.log("fcmToken::", fcmToken);
-    
     const user = await Auth.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 

@@ -7,15 +7,11 @@ exports.getPendingAdmins = async (req, res) => {
       role: "admin",
       status: "pending",
     }).select("-password");
-
-    console.log("pendingAdmins:::", pendingAdmins);
-    
-
+  
     const superAdmins = await Auth.find({
       role: "super-admin",
       fcmToken: { $ne: "" },
     });
-    console.log("super admin::", superAdmins);
     res.json(pendingAdmins);
   } catch (err) {
     res.status(500).json({ message: err.message });

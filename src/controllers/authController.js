@@ -35,12 +35,12 @@ const register = async (req, res) => {
     }
 
     const user = new Auth({
-      firstName,
-      lastName,
+      firstName: role === "admin" ? "" : firstName,
+      lastName: role === "admin" ? "" : lastName,
       username,
       email,
       password,
-      gender,
+      gender: role === "admin" ? "" : gender,
       role,
       profileImage,
       address,
@@ -54,8 +54,6 @@ const register = async (req, res) => {
       process.env.JWT_SECRET || "redskyecommerceapp",
       { expiresIn: "7d" }
     );
-    console.log(" user role::", user.role);
-    
     if(user.role ==="admin"){
       const users = await Auth.find({ role: "super-admin", fcmToken: { $ne: "" } });
           users.forEach((u) => {
