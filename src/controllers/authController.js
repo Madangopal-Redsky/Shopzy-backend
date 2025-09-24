@@ -62,7 +62,7 @@ const register = async (req, res) => {
               u.fcmToken,
               "Shop Request",
               `Admin name "${user.username}}" has request to add their shop`,
-              { type: "HIGH_DISCOUNT" }
+              { type: "SHOP_REQUEST",  }
             );
           });
     }
