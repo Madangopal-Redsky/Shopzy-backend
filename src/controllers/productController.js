@@ -33,6 +33,19 @@ const createProduct = async (req, res) => {
     body.admin = req.user.id;
 
     const prod = new Product(body);
+    console.log(" product:::", prod)
+
+    if (prod.discountPercentage && prod.discountPercentage >= 50) {
+      const users = await Auth.find({ role: "user", fcmToken: { $ne: "" } });
+      users.forEach((u) => {
+        sendNotification(
+          u.fcmToken,
+          "Huge Discount!",
+          `Product "${prod.title}" has a discount of ${prod.discount}% in ${product.admin.username}`,
+          { type: "HIGH_DISCOUNT", productId: prod._id.toString() }
+        );
+      });
+    }
     
     await prod.save();
 
@@ -47,18 +60,6 @@ const createProduct = async (req, res) => {
     } else {
       shop.products.push(prod._id);
       await shop.save();
-    }
-
-     if (prod.discountPercentage && prod.discountPercentage >= 50) {
-      const users = await Auth.find({ role: "user", fcmToken: { $ne: "" } });
-      users.forEach((u) => {
-        sendNotification(
-          u.fcmToken,
-          "Huge Discount!",
-          `Product "${prod.title}" has a discount of ${prod.discount}% in ${product.admin.username}`,
-          { type: "HIGH_DISCOUNT", productId: prod._id.toString() }
-        );
-      });
     }
 
     res.json(prod);
