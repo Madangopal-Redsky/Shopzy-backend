@@ -49,7 +49,7 @@ const createProduct = async (req, res) => {
       await shop.save();
     }
 
-     if (prod.discount && prod.discount >= 50) {
+     if (prod.discountPercentage && prod.discountPercentage >= 50) {
       const users = await Auth.find({ role: "user", fcmToken: { $ne: "" } });
       users.forEach((u) => {
         sendNotification(
