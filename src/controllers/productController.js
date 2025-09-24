@@ -50,6 +50,8 @@ const createProduct = async (req, res) => {
     await prod.save();
 
     let shop = await Shop.findOne({ admin: req.user.id });
+    console.log(" shop:::", shop );
+    
     if (!shop) {
       shop = await Shop.create({
         admin: req.user.id,
@@ -61,6 +63,9 @@ const createProduct = async (req, res) => {
       shop.products.push(prod._id);
       await shop.save();
     }
+
+    console.log(" shop after:::", shop, prod );
+    
 
     res.json(prod);
   } catch (err) {
