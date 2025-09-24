@@ -33,28 +33,21 @@ const createProduct = async (req, res) => {
     body.admin = req.user.id;
 
     const prod = new Product(body);
-    console.log(" product:::", prod)
 
-   try {
      if (prod.discountPercentage && prod.discountPercentage >= 50) {
        const users = await Auth.find({ role: "user", fcmToken: { $ne: "" } });
        users.forEach((u) => {
          sendNotification(
            u.fcmToken,
            "Huge Discount!",
-           `Product "${prod.title}" has a discount of ${prod.discount}% in ${product.admin.username}`,
+           `Product "${prod.title}" has a discount of ${prod.discount}% in ${prod.admin.username}`,
            { type: "HIGH_DISCOUNT", productId: prod._id.toString() }
          );
        });
-     }
-   } catch (error) {
-    console.log("Notification error:", error);
-   }
-    
+     }    
     await prod.save();
 
     let shop = await Shop.findOne({ admin: req.user.id });
-    console.log(" shop:::", shop );
     
     if (!shop) {
       shop = await Shop.create({
@@ -67,9 +60,6 @@ const createProduct = async (req, res) => {
       shop.products.push(prod._id);
       await shop.save();
     }
-
-    console.log(" shop after:::", shop, prod );
-    
 
     res.json(prod);
   } catch (err) {
